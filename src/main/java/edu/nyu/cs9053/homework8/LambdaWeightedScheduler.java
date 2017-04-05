@@ -34,13 +34,13 @@ public class LambdaWeightedScheduler {
         /* At first, remove invalid jobs in the ArrayList using Iterator<> to ensure a safe
         modification on a collection during iteration */
         for (Iterator<WeightedJob> iter = jobs.iterator(); iter.hasNext(); ){
-            WeightedJob j = iter.next();
-            if (j.getFinishTime() > this.finishTime || j.getStartTime() < this.startTime) {
+            WeightedJob job = iter.next();
+            if (job.getFinishTime() > this.finishTime || job.getStartTime() < this.startTime) {
                 iter.remove();
             }
         }
         // Get the number of available jobs
-        int n = jobs.size();
+        int size = jobs.size();
         // Sort all elements by their finishing times
         Collections.sort(jobs, new Comparator<WeightedJob>() {
             @Override
@@ -52,7 +52,7 @@ public class LambdaWeightedScheduler {
         ArrayList<ArrayList<WeightedJob>> dpTable = new ArrayList<>();
         /* Initialize the dpTable (at the beginning, the subset at each entry only
         contains the corresponding job at the same index in "jobs". */
-        for (int i=0; i<n; i++) {
+        for (int i=0; i<size; i++) {
             ArrayList<WeightedJob> list = new ArrayList<WeightedJob>();
             list.add(jobs.get(i));
             dpTable.add(list);
@@ -60,7 +60,7 @@ public class LambdaWeightedScheduler {
         /* Then, starting from i=1, let j parse through the indices before i (j < i). If the job at i
         conflict with the job at j, we should not put their subsets together. If not conflicted, these jobs
         then can co-exist, so we can merge them together and store the merged subset at index i in dpTable. */
-        for (int i=1; i<n; i++) {
+        for (int i=1; i<size; i++) {
             /* If the current job at index i contains greater weight than the previous sunset, then use it to
             update the table entry. */
             if (getTotalWeight(dpTable.get(i-1)) < jobs.get(i).getWeight()){
@@ -83,7 +83,7 @@ public class LambdaWeightedScheduler {
         }
         // find the entry in dpTable that has the maximum total weight, and return it
         ArrayList<WeightedJob> res = new ArrayList<WeightedJob>(); int currentMaxWeight = 0;
-        for (int i=0; i<n; i++) {
+        for (int i=0; i<size; i++) {
             int currentWeight = getTotalWeight(dpTable.get(i));
             if (currentWeight > currentMaxWeight) {
                 res = dpTable.get(i);

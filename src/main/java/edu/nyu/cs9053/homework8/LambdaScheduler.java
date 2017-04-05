@@ -25,8 +25,8 @@ public class LambdaScheduler {
         /* At first, remove invalid jobs in the ArrayList using Iterator<> to ensure a safe
         modification on a collection during iteration */
         for (Iterator<Job> iter = jobs.iterator(); iter.hasNext(); ){
-            Job j = iter.next();
-            if (j.getFinishTime() > this.finishTime || j.getStartTime() < this.startTime) {
+            Job job = iter.next();
+            if (job.getFinishTime() > this.finishTime || job.getStartTime() < this.startTime) {
                 iter.remove();
             }
         }
